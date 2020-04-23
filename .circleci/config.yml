@@ -38,7 +38,7 @@ jobs:
       - run:
           name: Trigger workflows
 #          command: chmod +x .circleci/circle_trigger.sh && .circleci/circle_trigger.sh
-          command: "Scanned the libraries and detected a change. Triggering associated workflow....."
+          command: echo "Scanned the libraries and detected a change. Triggering associated workflow....."
 
   build:
     parameters:
