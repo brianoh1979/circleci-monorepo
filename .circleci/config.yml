@@ -21,6 +21,9 @@ parameters:
   gateway:
     type: boolean
     default: false
+  sensor:
+    type: boolean
+    default: false
 
 executors:
   node:
@@ -140,3 +143,15 @@ workflows:
           package_name: gateway
           requires:
             - gateway-build
+
+  sensor:
+    when: << pipeline.parameters.sensor >>
+    jobs:
+      - build:
+          name: sensor-build
+          package_name: sensor
+      - deploy:
+          name: sensor-deploy
+          package_name: sensor
+          requires:
+            - sensor-build
