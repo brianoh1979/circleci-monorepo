@@ -67,12 +67,12 @@ workflows:
     jobs:
       - build:
           name: api-build
-          package_name: -Dacceptance.hds.rdbms.type=mysql -Dacceptance.hds.url=jdbc:mysql://localhost:3306 -Dacceptance.hds.dbuser=admin -Dacceptance.hds.password=Pa66word
+          MVN_PARAMS: -Dacceptance.hds.rdbms.type=mysql -Dacceptance.hds.url=jdbc:mysql://localhost:3306 -Dacceptance.hds.dbuser=admin -Dacceptance.hds.password=Pa66word
 
   app:
     when: << pipeline.parameters.app >>
     jobs:
       - build:
           name: app-build
-          package_name: -Dacceptance.hds.rdbms.type=mysql -Dacceptance.hds.url=jdbc:mysql://localhost:3306 -Dacceptance.hds.dbuser=root -Dacceptance.hds.password=Pa55word
+          MVN_PARAMS: -Dacceptance.hds.rdbms.type=mysql -Dacceptance.hds.url=jdbc:mysql://localhost:3306 -Dacceptance.hds.dbuser=root -Dacceptance.hds.password=Pa55word
 
