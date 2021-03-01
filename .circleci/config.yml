@@ -15,15 +15,6 @@ parameters:
   app:
     type: boolean
     default: false
-  auth:
-    type: boolean
-    default: false
-  gateway:
-    type: boolean
-    default: false
-  sensor:
-    type: boolean
-    default: false
 
 executors:
   node:
@@ -46,7 +37,7 @@ jobs:
         type: string
 
     executor: node
-    working_directory: ~/project/packages/<< parameters.package_name >>
+    working_directory: ~/project/packages
 
     steps:
       - checkout:
@@ -55,34 +46,8 @@ jobs:
       - run:
           name: Content 
           command: |
-            cat README.md 
-            echo "<< parameters.package_name >> built." > build.txt
-      - run:
-          name: Build
-          command: echo "Build << parameters.package_name >> ..."
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - packages/<< parameters.package_name >>
-
-  deploy:
-    parameters:
-      package_name:
-        type: string
-
-    executor: node
-    working_directory: ~/project/packages/<< parameters.package_name >>
-
-    steps:
-      - attach_workspace:
-          at: ~/project
-      # This step is added to show that files are available from the build job. 
-      - run:
-          name: Content to deploy
-          command: ls && cat build.txt
-      - deploy:
-          name: Deploy
-          command: echo "Deploying << parameters.package_name >> ..."
+            echo $DISPLAY
+            mvn -B -f pom.xml clean install -V -U -Dacceptance.test.log.level=INFO -Dtycho.localArtifacts=ignore -Dsurefire.rerunFailingTestsCount=2 -Pacceptance,deployment-plugins << parameters.MVN_PARAMS >> -s ctc.settings.xml 
 
 workflows:
   version: 2
@@ -102,57 +67,12 @@ workflows:
     jobs:
       - build:
           name: api-build
-          package_name: api
-      - deploy:
-          name: api-deploy
-          package_name: api
-          requires:
-            - api-build
+          package_name: -Dacceptance.hds.rdbms.type=mysql -Dacceptance.hds.url=jdbc:mysql://localhost:3306 -Dacceptance.hds.dbuser=admin -Dacceptance.hds.password=Pa66word
 
   app:
     when: << pipeline.parameters.app >>
     jobs:
       - build:
           name: app-build
-          package_name: app
-      - deploy:
-          name: app-deploy
-          package_name: app
-          requires:
-            - app-build
+          package_name: -Dacceptance.hds.rdbms.type=mysql -Dacceptance.hds.url=jdbc:mysql://localhost:3306 -Dacceptance.hds.dbuser=root -Dacceptance.hds.password=Pa55word
 
-  auth:
-    when: << pipeline.parameters.auth >>
-    jobs:
-      - build:
-          name: auth-build
-          package_name: auth
-      - deploy:
-          name: auth-deploy
-          package_name: auth
-          requires:
-            - auth-build
-
-  gateway:
-    when: << pipeline.parameters.gateway >>
-    jobs:
-      - build:
-          name: gateway-build
-          package_name: gateway
-      - deploy:
-          name: gateway-deploy
-          package_name: gateway
-          requires:
-            - gateway-build
-
-  sensor:
-    when: << pipeline.parameters.sensor >>
-    jobs:
-      - build:
-          name: sensor-build
-          package_name: sensor
-      - deploy:
-          name: sensor-deploy
-          package_name: sensor
-          requires:
-            - sensor-build
