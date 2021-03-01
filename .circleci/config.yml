@@ -33,7 +33,7 @@ jobs:
 
   build:
     parameters:
-      package_name:
+      MVN_PARAMS:
         type: string
 
     executor: node
