@@ -16,10 +16,14 @@ executors:
 
 jobs:
   conditional-job:
+    parameters:
+      mvn_params:
+        type: string
+
     executor: node
     steps:
       - checkout:
-        path: ~/project
+          path: ~/project
       - run:
           name: Content
           command: |
