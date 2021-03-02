@@ -8,9 +8,6 @@ parameters:
   mvn_params:
     type: string
     default: "-Dacceptance.hds.rdbms.type=mysql -Dacceptance.hds.url=jdbc:mysql://localhost:3306 -Dacceptance.hds.dbuser=root -Dacceptance.hds.password=Pa55word"
-  app:
-    type: boolean
-    default: true
 
 executors:
   node:
@@ -21,17 +18,13 @@ jobs:
   conditional-job:
     executor: node
     steps:
-      - when:
-          condition:
-            equal: [ "maven2", << pipeline.paramaters.mvn_params >> ]
-          steps:
-            - checkout:
-                path: ~/project
-            - run:
-                name: Content
-                command: |
-                  echo $DISPLAY
-                  mvn -B -f pom.xml clean install -V -U -Dacceptance.test.log.level=INFO -Dtycho.localArtifacts=ignore -Dsurefire.rerunFailingTestsCount=2 -Pacceptance,deployment-plugins << pipeline.parameters.mvn_params >> -s ctc.settings.xml
+      - checkout:
+        path: ~/project
+      - run:
+          name: Content
+          command: |
+             echo $DISPLAY
+             mvn -B -f pom.xml clean install -V -U -Dacceptance.test.log.level=INFO -Dtycho.localArtifacts=ignore -Dsurefire.rerunFailingTestsCount=2 -Pacceptance,deployment-plugins << pipeline.parameters.mvn_params >> -s ctc.settings.xml
 
 
 workflows:
