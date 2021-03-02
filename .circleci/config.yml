@@ -5,9 +5,9 @@ version: 2.1
 parameters:
 
   # A parameter per package
-  api:
-    type: boolean
-    default: true
+  mvn_params:
+    type: string
+    default: "-Dacceptance.hds.rdbms.type=mysql -Dacceptance.hds.url=jdbc:mysql://localhost:3306 -Dacceptance.hds.dbuser=root -Dacceptance.hds.password=Pa55word"
   app:
     type: boolean
     default: true
