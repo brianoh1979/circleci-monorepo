@@ -17,6 +17,22 @@ executors:
     docker:
       - image: cimg/openjdk:15.0
 
+jobs:
+  executor: node
+  conditional-job:
+    steps:
+      - when:
+          condition:
+            equal: [ "maven2", << pipeline.paramaters.mvn_params >> ]
+          steps:
+            - checkout:
+                path: ~/project
+            - run:
+                name: Content
+                command: |
+                  echo $DISPLAY
+                  mvn -B -f pom.xml clean install -V -U -Dacceptance.test.log.level=INFO -Dtycho.localArtifacts=ignore -Dsurefire.rerunFailingTestsCount=2 -Pacceptance,deployment-plugins << pipeline.parameters.mvn_params >> -s ctc.settings.xml
+
 
 workflows:
   version: 2
@@ -34,18 +50,3 @@ workflows:
     jobs:
       - conditional-job
 
-jobs:
-  executor: node
-  conditional-job:
-    steps:
-      - when:
-          condition:
-            equal: [ "maven2", << pipeline.paramaters.mvn_params >> ]
-          steps:
-            - checkout:
-                path: ~/project
-            - run:
-                name: Content
-                command: |
-                  echo $DISPLAY
-                  mvn -B -f pom.xml clean install -V -U -Dacceptance.test.log.level=INFO -Dtycho.localArtifacts=ignore -Dsurefire.rerunFailingTestsCount=2 -Pacceptance,deployment-plugins << pipeline.parameters.mvn_params >> -s ctc.settings.xml
