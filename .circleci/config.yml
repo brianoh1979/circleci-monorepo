@@ -26,7 +26,7 @@ jobs:
           name: Content
           command: |
             echo $IMAGETAG
-            mvn -B -f pom.xml clean install -V -U -Dacceptance.test.log.level=INFO -Dtycho.localArtifacts=ignore -Dsurefire.rerunFailingTestsCount=2 -Pacceptance,deployment-plugins ${IMAGETAG} >> -s ctc.settings.xml
+            mvn -B -f pom.xml clean install -V -U -Dacceptance.test.log.level=INFO -Dtycho.localArtifacts=ignore -Dsurefire.rerunFailingTestsCount=2 -Pacceptance,deployment-plugins $IMAGETAG >> -s ctc.settings.xml
 
 
 workflows:
