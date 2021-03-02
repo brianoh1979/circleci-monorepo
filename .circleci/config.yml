@@ -39,11 +39,6 @@ workflows:
 
   # Workflows defined for each package.
 
-  api:
-    when: << pipeline.parameters.api >>
-    jobs:
-      - conditional-job
-
   app:
     jobs:
       - conditional-job
