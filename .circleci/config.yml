@@ -16,10 +16,6 @@ executors:
 
 jobs:
   conditional-job:
-    parameters:
-      mvn_params:
-        type: string
-
     executor: node
     environment:
       IMAGETAG: << pipeline.parameters.mvn_params >>
