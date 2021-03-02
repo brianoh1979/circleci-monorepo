@@ -18,8 +18,8 @@ executors:
       - image: cimg/openjdk:15.0
 
 jobs:
-  executor: node
   conditional-job:
+    executor: node
     steps:
       - when:
           condition:
@@ -42,9 +42,7 @@ workflows:
   api:
     when: << pipeline.parameters.api >>
     jobs:
-      - build:
-          name: api-build
-          MVN_PARAMS: -Dacceptance.hds.rdbms.type=mysql -Dacceptance.hds.url=jdbc:mysql://localhost:3306 -Dacceptance.hds.dbuser=admin -Dacceptance.hds.password=Pa66word
+      - conditional-job
 
   app:
     jobs:
